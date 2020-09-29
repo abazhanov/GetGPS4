@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-       // obtieneLocalizacion();
-        obtieneLocalizacionWthPermissionChek();
+       obtieneLocalizacion();
+        //obtieneLocalizacionWthPermissionChek();
     }
 
 
