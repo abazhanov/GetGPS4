@@ -2,18 +2,14 @@ package com.example.getgps4
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Intent
 import android.location.Location
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+
 
 private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -23,12 +19,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //FirstStart()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
 
-       obtieneLocalizacion();
-        //obtieneLocalizacionWthPermissionChek();
+       //obtieneLocalizacion();
+        obtieneLocalizacionWithPermissionCheck();
     }
 
 
@@ -38,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
-    private fun obtieneLocalizacion(){
+    fun obtieneLocalizacion(){
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 //var latitude = location?.latitude
@@ -48,6 +46,28 @@ class MainActivity : AppCompatActivity() {
                 Txt_Longitude.text = location?.longitude.toString()
 
             }
+    }
+
+
+    fun FirstStart(){
+        val mLocationRequest = LocationRequest.create()
+        mLocationRequest.interval = 60000
+        mLocationRequest.fastestInterval = 5000
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        val mLocationCallback: LocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                if (locationResult == null) {
+                    return
+                }
+                for (location in locationResult.locations) {
+                    if (location != null) {
+                        //TODO: UI updates.
+                    }
+                }
+            }
+        }
+        LocationServices.getFusedLocationProviderClient(this)
+            .requestLocationUpdates(mLocationRequest, mLocationCallback, null)
     }
 
 }
